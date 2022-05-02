@@ -15,9 +15,11 @@
 
 .media-block .media-left {
   display: block;
-  float: left; }
+  float: left;
+  padding-right: 10px; }
 .media-block .media-right {
-  float: right; }
+  float: right;
+  padding-right: 10px; }
 .media-block .media-body {
   display: block;
   overflow: hidden;
@@ -69,5 +71,9 @@
 
 .mar-top {
   margin-top: 15px; }
+
+.img-sm {
+  width: 46px;
+  height: 46px; }
 
 /*# sourceMappingURL=style.css.map */

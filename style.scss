@@ -18,10 +18,12 @@
 .media-block {
   .media-left {
     display: block;
-    float: left
+    float: left;
+    padding-right: 10px;
   }
   .media-right {
-    float: right
+    float: right;
+    padding-right: 10px;
   }
   .media-body {
     display: block;
@@ -33,7 +35,7 @@
   .media-left,
   .media-right,
   .media-body {
-    vertical-align: middle
+    vertical-align: middle;
   }
 }
 .thumbnail {
@@ -77,4 +79,8 @@
 }
 .mar-top {
   margin-top: 15px;
+}
+.img-sm {
+  width: 46px;
+  height: 46px;
 }
