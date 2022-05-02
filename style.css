@@ -76,4 +76,14 @@
   width: 46px;
   height: 46px; }
 
+.error {
+  border-color: red; }
+
+label.error {
+  font-size: 12px;
+  color: red; }
+
+p.error {
+  color: red; }
+
 /*# sourceMappingURL=style.css.map */

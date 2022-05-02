@@ -4,7 +4,56 @@ var $addCommentBtn = $('.js-add-comment');
 var $readMoreBtn = $('.js-read-more');
 var $authBtn = $('.js-auth');
 
-var login = true;
+class Auth {
+    constructor() {
+        this._auth = false;
+    }
+
+    getAuth() {
+        return this._auth;
+    }
+
+    setAuth(value) {
+        this._auth = value;
+    }
+}
+
+var author = new Auth;
+
+$('#userAuth').validate({
+    rules: {
+        name: {
+            required: true,
+            minlength: 3
+        },
+        login: {
+            required: true,
+            minlength: 3
+        },
+        pass: {
+            required: true,
+            minlength: 3
+        }
+    },
+    messages: {
+        name: {
+            required: "Обязательное поле",
+            minlength: "Введите имя не менее 5 символов"
+        },
+        login: {
+            required: "Обязательное поле",
+            minlength: "Введите имя не менее 5 символов"
+        },
+        pass: {
+            required: "Обязательное поле",
+            minlength: "Пароль должен быть не менее 5 символов"
+        }
+    },
+    errorPlacement: function(error, element) {
+        var item = element.parents('.item');
+        item.append(error);
+    }
+})
 
 function templateComment(imageUser, nameUser, textComment, dateComment) {
     var image = (imageUser) ? imageUser : 'https://bootstraptema.ru/snippets/icons/2016/mia/1.png';
@@ -31,35 +80,74 @@ function templateComment(imageUser, nameUser, textComment, dateComment) {
     return commentTmp;
 }
 
+function successAuth() {
+    var $form = $('#userAuth')
+    $('.js-modal-text').text('Вы авторизованы');
+    $form.val('');
+    $form.hide();
+    $('.js-modal-text').removeClass('error');
+    setTimeout(function () {
+        $('#authUser').modal('hide');
+    }, 1000)
+    author.setAuth(true);
+}
+
+function errorAuth () {
+    $('.js-modal-text').text('Неверный логин и пароль');
+    $('.js-modal-text').addClass('error');
+    author.setAuth(false);
+}
+
+function ajaxSubmit() {
+    console.log('ajaxForm');
+    var $form = $('#userAuth');
+    if ($form.valid()) {
+        console.log('valid');
+        var authData = $form.serialize();
+        console.log($form.find('[name = "login"]').val());
+        var login = $form.find('[name = "login"]').val();
+        var pass = $form.find('[name = "pass"]').val();
+        $.ajax({
+            url: 'json/auth.json',
+            method: 'GET',
+            data: authData,
+            success: function (result) {
+                console.log('success auth');
+                if (result) {
+                    if (result.login === login && result.password === pass) {
+                        successAuth();
+                    } else {
+                        errorAuth();
+                    }
+                }
+            }
+
+        })
+    }
+
+}
+
 if ($addCommentBtn) {
-    console.log('1');
     $addCommentBtn.on('click', function (e) {
         e.preventDefault();
-        console.log('click 1');
-        if (login) {
-            console.log('login true');
+        if (author.getAuth()) {
             $('.js-comment-body').prepend(templateComment())
         } else {
-            $('#addComment').modal()
+            $('#authUser').modal()
         }
     });
 }
 
 if ($readMoreBtn) {
-    console.log('2');
     $readMoreBtn.on('click', function (e) {
         e.preventDefault();
-        console.log('click 2');
         $.ajax({
             url: 'json/comments.json',
             method: 'GET',
             success: function (result) {
-                console.log('success ajax comment');
-                console.log(result);
                 if (result) {
                     $.each(result, function (index, value) {
                         if (index < 3) {
-                            console.log(index, ' - ', value.name);
                             $('.js-comment-body').append(templateComment(value.image, value.name, value.comment, value.date))
                         }
                     })
@@ -71,10 +159,8 @@ if ($readMoreBtn) {
 }
 
 if ($authBtn) {
-    console.log('3');
     $authBtn.on('click', function (e) {
         e.preventDefault();
-        console.log('click 3');
-
+        ajaxSubmit();
     });
 }
