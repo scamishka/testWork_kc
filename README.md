@@ -1,2 +1,4 @@
 # testWork_kc
-testing work for keep calm
+
+страница с текстом и комментариями, с возможностью добавить комментарий для авторизованных пользователей.
+html, css, js, json, ajax, php
